@@ -82,6 +82,7 @@ class TSocket(TSocketBase):
       for res in res0:
         self.handle = socket.socket(res[0], res[1])
         self.handle.settimeout(self._timeout)
+        self.handle.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         try:
           self.handle.connect(res[4])
         except socket.error, e:
@@ -164,6 +165,8 @@ class TServerSocket(TSocketBase, TServerTransportBase):
 
     self.handle = socket.socket(res[0], res[1])
     self.handle.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    self.handle.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+
     if hasattr(self.handle, 'settimeout'):
       self.handle.settimeout(None)
     self.handle.bind(res[4])
